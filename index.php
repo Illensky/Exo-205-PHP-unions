@@ -7,3 +7,41 @@
  * Utilisez UNION ALL pour afficher toutes les données y compris les doublons, affichez le résultat  à l'aide d'une boucle ou d'un print_r.
  * PS: Si vous utilisez un print_r, alors utilisez la balise <pre> pour un résultat plus propre.
  */
+
+require __DIR__ . '/Classes/DBSingleton.php';
+
+$pdo = DBSingleton::PDO();
+
+$stm = $pdo->prepare("
+    SELECT username
+    FROM admin
+    UNION
+    SELECT username
+    FROM user 
+    UNION
+    SELECT username
+    FROM client
+");
+
+if ($stm->execute()) {
+    echo "<pre>";
+    print_r($stm->fetchAll());
+    echo "</pre>";
+}
+
+$stm = $pdo->prepare("
+    SELECT username
+    FROM admin
+    UNION ALL
+    SELECT username
+    FROM user 
+    UNION ALL
+    SELECT username
+    FROM client
+");
+
+if ($stm->execute()) {
+    echo "<pre>";
+    print_r($stm->fetchAll());
+    echo "</pre>";
+}
